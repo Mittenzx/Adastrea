@@ -13,6 +13,56 @@ The Economy System simulates **supply/demand dynamics** across markets, creating
 
 ---
 
+## Raw resources, production and drones (built 2026-10-03)
+
+**Raw resources in markets.** Every crafting-tree item is on sale at every station
+(`UCraftingTreeLoader::PopulateMarketInventory`). The 30 raw resources (ores, ice, gases,
+salvage) are now the same trade item assets the drones mine (`DA_TradeItem_<Item>`, made by
+`Tools/ue_make_resource_types.py`), so mined ore and market ore are one item with one price
+(50 / 110 / 260 cr by galaxy tier). Each station then sets supply, demand and stock of its raw
+resources from `Galaxy.json` (`ASpaceStation::ApplyRegionalSupply`):
+
+| Where the resource is found | Supply | Demand | Stock | Price vs base |
+|---|---|---|---|---|
+| This sector, High richness | 1.35 | 0.85 | 30-60k | ~0.63x |
+| This sector, Medium (or a field POI) | 1.25 | 0.90 | 20-40k | ~0.72x |
+| This sector, Low | 1.15 | 0.95 | 12-24k | ~0.83x |
+| Another sector of the same system | 1.00 | 1.00 | 4-10k | 1x |
+| Nowhere in the system (imported) | 0.85 | 1.20 | 0.4-2k | ~1.41x |
+
+So ore is cheap at the mine and dear where it isn't found: hauling it is a trade route.
+Entries hand-authored on a station's `StationMarket` keep their own values. Items had no
+category in the JSON (everything was "Refined Goods"); they now take their recipe's category.
+`adastrea.MarketInfo` lists a station's raw resource prices.
+
+**Production.** `UCraftingManager` (GameInstance subsystem) owns the one shared crafting tree
+and runs recipes at stations. Docked, open **Production Floor** from the station menu: one tab
+per facility the station has modules for (Processing, Fabrication, Reactor, the labs), its
+recipes with how many runs the hold can afford, and the station's job queue. Space queues one
+run, Q five, X as many as the hold allows; B moves to the job list, where X cancels a job
+(unstarted runs refund their ingredients). Ingredients leave the hold when a job is queued.
+A run takes 6-90 s by tier, divided by the number of modules of that facility; each facility
+works one job at a time, up to 4 queued. Finished goods wait at the station and go into the
+hold while you're docked there. Jobs keep running in other sectors and are saved. Recipes that
+need research are listed but locked. Console: `adastrea.CraftInfo`, `adastrea.Craft Output
+[Runs]`, `adastrea.CraftSpeed X`.
+
+**Drones.** Gas pockets have their own drone behaviour: drones fly into the pocket and draw gas
+through a spinning intake ring while drifting round it; no clamping or drilling, no rock dust.
+Wreck debris and ice are worked like rock: cutting plate free is drilling with another name,
+so salvage keeps the mining behaviour and the HUD says SALVAGING. The kind comes from
+`UAsteroidDataAsset::ResourceKind` (Auto works it out from the ore). **Cargo drones**
+(`ACargoDrone`) move goods between ships a pod (25 volume) at a time: take from a wreck or a
+ship of the same owner, give to a ship of the same owner. Lock a wreck and press the drone key
+to strip its hold; press again to stop. Goods from someone else's wreck are stolen (see
+[PIRACY_AND_LAW.md](PIRACY_AND_LAW.md), step 3).
+
+**Names.** The HUD names stations by `StationName`, else their level label (kept in packaged
+builds by `ASpaceStation::SavedLabel`), and ships by roster name, else ship type
+(`AdastreaNames::ForActor`), never by object name.
+
+---
+
 ## 📦 Core Class: UEconomyManager
 
 ```cpp

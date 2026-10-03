@@ -36,6 +36,26 @@ struct FStationBlueprintEntry
     bool bIsCore = false;
 };
 
+/** How a station treats stolen cargo (FCargoEntry::StolenFrom). */
+UENUM(BlueprintType)
+enum class EStationLaw : uint8
+{
+    /** From the sector: High/Medium security is Lawful, Low/None is a Fence; pirate-owned and black-market stations are Fences. */
+    Auto,
+    /** Customs scans ships as they dock: stolen goods are confiscated and fined. Its market won't buy them. */
+    Lawful,
+    /** No questions asked: the market buys stolen goods, at a discount. */
+    Fence,
+};
+
+/** What a customs scan on docking found and did. */
+struct FCustomsResult
+{
+    int32 UnitsConfiscated = 0;
+    int32 Fine = 0;
+    bool bScanned = false;
+};
+
 /**
  * Core space station actor with modular construction system
  *
@@ -516,6 +536,23 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Station")
         FText StationName;
 
+public:
+    /**
+     * The editor label, kept on save so packaged builds (which strip labels) still
+     * know what the level designer called the station.
+     */
+    UPROPERTY(VisibleInstanceOnly, Category="Station")
+    FString SavedLabel;
+
+    /**
+     * The name to show players: StationName unless it was left at the "Space Station"
+     * default, else the editor label, else the class name made readable.
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station")
+    FString GetDisplayNameString() const;
+
+    virtual void PreSave(FObjectPreSaveContext ObjectSaveContext) override;
+
         /**
          * The market data asset for this station. If set, the station assigns it to
          * its marketplace modules during BeginPlay (overriding the module's own
@@ -527,4 +564,39 @@ protected:
 
         /** Assign the given market to all marketplace modules on this station. */
         void ApplyStationMarket();
+
+        /**
+         * Raw resources are cheap and plentiful where they're found and dear where they
+         * aren't: sets supply, demand and stock of the market's raw-material entries from
+         * the galaxy (this sector's resources and fields, then the rest of its system).
+         * Entries authored on StationMarket keep their hand-set values.
+         */
+        void ApplyRegionalSupply(class UMarketDataAsset* Market, const TArray<FName>& AuthoredItemIds) const;
+
+        // ---- Stolen cargo (docs/11-TECHNICAL_SPECS/PIRACY_AND_LAW.md, step 3) ----
+
+        UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station|Law")
+        EStationLaw Law = EStationLaw::Auto;
+
+        /** Share of the normal sell price a fence pays for stolen goods. */
+        UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station|Law", meta=(ClampMin="0.0", ClampMax="1.0"))
+        float FenceRate = 0.55f;
+
+        /** Customs fine, as a share of the confiscated goods' base value. */
+        UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station|Law", meta=(ClampMin="0.0"))
+        float StolenGoodsFineRate = 0.5f;
+
+        /** Law with Auto resolved from the sector's security and the station's owner. */
+        UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Law")
+        EStationLaw GetEffectiveLaw() const;
+
+        UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Law")
+        bool BuysStolenGoods() const { return GetEffectiveLaw() == EStationLaw::Fence; }
+
+        /**
+         * Customs check as a ship docks (lawful stations only): stolen cargo is confiscated
+         * and the ship's trader fined StolenGoodsFineRate of its value (as much as it can
+         * pay). The fine goes to the station's owner.
+         */
+        FCustomsResult ScanDockedShip(class ASpaceship* Ship);
     };

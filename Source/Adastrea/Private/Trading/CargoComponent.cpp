@@ -19,6 +19,11 @@ UCargoComponent::UCargoComponent()
 
 bool UCargoComponent::AddCargo(UTradeItemDataAsset* Item, int32 Quantity)
 {
+	return AddStolenCargo(Item, Quantity, NAME_None);
+}
+
+bool UCargoComponent::AddStolenCargo(UTradeItemDataAsset* Item, int32 Quantity, FName Owner)
+{
 	if (!Item || Quantity <= 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("CargoComponent: Invalid item or quantity"));
@@ -32,28 +37,108 @@ bool UCargoComponent::AddCargo(UTradeItemDataAsset* Item, int32 Quantity)
 		return false;
 	}
 
-	// Find existing entry or create new one
-	int32 EntryIndex = FindCargoEntryIndex(Item);
-
+	// Find existing entry (same goods, same stolen tag) or create new one
+	const int32 EntryIndex = FindCargoEntryIndex(Item, Owner);
 	if (EntryIndex != INDEX_NONE)
 	{
-		// Add to existing entry
 		CargoInventory[EntryIndex].Quantity += Quantity;
 	}
 	else
 	{
-		// Create new entry
-		CargoInventory.Add(FCargoEntry(Item, Quantity));
+		CargoInventory.Add(FCargoEntry(Item, Quantity, Owner));
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("CargoComponent: Added %d x %s (total: %d, available space: %.1f)"),
-		Quantity, *Item->ItemName.ToString(), GetItemQuantity(Item), GetAvailableCargoSpace());
+	UE_LOG(LogTemp, Log, TEXT("CargoComponent: Added %d x %s%s (total: %d, available space: %.1f)"),
+		Quantity, *Item->ItemName.ToString(), Owner.IsNone() ? TEXT("") : *FString::Printf(TEXT(" (stolen from %s)"), *Owner.ToString()),
+		GetItemQuantity(Item), GetAvailableCargoSpace());
 
 	// Broadcast events
 	OnCargoAdded.Broadcast(Item, Quantity);
 	OnCargoSpaceChanged.Broadcast(GetAvailableCargoSpace());
 
 	return true;
+}
+
+bool UCargoComponent::AddEntry(const FCargoEntry& Entry)
+{
+	return AddStolenCargo(Entry.Item, Entry.Quantity, Entry.StolenFrom);
+}
+
+TArray<FCargoEntry> UCargoComponent::TakeLoad(float MaxVolume)
+{
+	TArray<FCargoEntry> Taken;
+	float Room = MaxVolume;
+	for (int32 i = 0; i < CargoInventory.Num() && Room > KINDA_SMALL_NUMBER; ++i)
+	{
+		FCargoEntry& Entry = CargoInventory[i];
+		if (!Entry.Item || Entry.Quantity <= 0)
+		{
+			continue;
+		}
+		const float Volume = Entry.Item->VolumePerUnit;
+		const int32 Units = Volume > KINDA_SMALL_NUMBER ? FMath::Min(Entry.Quantity, FMath::FloorToInt(Room / Volume + KINDA_SMALL_NUMBER)) : Entry.Quantity;
+		if (Units <= 0)
+		{
+			continue;
+		}
+		Taken.Add(FCargoEntry(Entry.Item, Units, Entry.StolenFrom));
+		Room -= Volume * Units;
+		Entry.Quantity -= Units;
+		OnCargoRemoved.Broadcast(Entry.Item, Units);
+		if (Entry.Quantity <= 0)
+		{
+			CargoInventory.RemoveAt(i--);
+		}
+	}
+	if (!Taken.IsEmpty())
+	{
+		OnCargoSpaceChanged.Broadcast(GetAvailableCargoSpace());
+	}
+	return Taken;
+}
+
+TArray<FCargoEntry> UCargoComponent::RemoveAllStolen()
+{
+	TArray<FCargoEntry> Removed;
+	for (int32 i = CargoInventory.Num() - 1; i >= 0; --i)
+	{
+		if (CargoInventory[i].IsStolen())
+		{
+			Removed.Insert(CargoInventory[i], 0);
+			OnCargoRemoved.Broadcast(CargoInventory[i].Item, CargoInventory[i].Quantity);
+			CargoInventory.RemoveAt(i);
+		}
+	}
+	if (!Removed.IsEmpty())
+	{
+		OnCargoSpaceChanged.Broadcast(GetAvailableCargoSpace());
+	}
+	return Removed;
+}
+
+int32 UCargoComponent::RemoveStolenCargo(UTradeItemDataAsset* Item, int32 Quantity)
+{
+	int32 Removed = 0;
+	for (int32 i = 0; Item && i < CargoInventory.Num() && Removed < Quantity; ++i)
+	{
+		FCargoEntry& Entry = CargoInventory[i];
+		if (Entry.IsStolen() && Entry.Item && (Entry.Item == Item || IdsMatch(Entry.Item->ItemID, Item->ItemID)))
+		{
+			const int32 Take = FMath::Min(Entry.Quantity, Quantity - Removed);
+			Entry.Quantity -= Take;
+			Removed += Take;
+			if (Entry.Quantity <= 0)
+			{
+				CargoInventory.RemoveAt(i--);
+			}
+		}
+	}
+	if (Removed > 0)
+	{
+		OnCargoRemoved.Broadcast(Item, Removed);
+		OnCargoSpaceChanged.Broadcast(GetAvailableCargoSpace());
+	}
+	return Removed;
 }
 
 bool UCargoComponent::RemoveCargo(UTradeItemDataAsset* Item, int32 Quantity)
@@ -65,37 +150,42 @@ bool UCargoComponent::RemoveCargo(UTradeItemDataAsset* Item, int32 Quantity)
 	}
 
 	// Check if we have the item
-	int32 CurrentQuantity = GetItemQuantity(Item);
+	const int32 CurrentQuantity = GetItemQuantity(Item);
 	if (CurrentQuantity < Quantity)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("CargoComponent: Don't have %d x %s in cargo (have %d)"), Quantity, *Item->ItemName.ToString(), CurrentQuantity);
 		return false;
 	}
 
-	// Find entry
-	int32 EntryIndex = FindCargoEntryIndex(Item);
-
-	if (EntryIndex != INDEX_NONE)
+	// Clean units first, then stolen ones (selling decides for itself which it may sell).
+	int32 Remaining = Quantity;
+	for (const bool bStolenPass : { false, true })
 	{
-		CargoInventory[EntryIndex].Quantity -= Quantity;
-
-		// Remove entry if quantity is now zero
-		if (CargoInventory[EntryIndex].Quantity <= 0)
+		for (int32 i = 0; i < CargoInventory.Num() && Remaining > 0; ++i)
 		{
-			CargoInventory.RemoveAt(EntryIndex);
+			FCargoEntry& Entry = CargoInventory[i];
+			if (Entry.IsStolen() != bStolenPass || !Entry.Item || (Entry.Item != Item && !IdsMatch(Entry.Item->ItemID, Item->ItemID)))
+			{
+				continue;
+			}
+			const int32 Take = FMath::Min(Entry.Quantity, Remaining);
+			Entry.Quantity -= Take;
+			Remaining -= Take;
+			if (Entry.Quantity <= 0)
+			{
+				CargoInventory.RemoveAt(i--);
+			}
 		}
-
-		UE_LOG(LogTemp, Log, TEXT("CargoComponent: Removed %d x %s (remaining: %d, available space: %.1f)"),
-			Quantity, *Item->ItemName.ToString(), GetItemQuantity(Item), GetAvailableCargoSpace());
-
-		// Broadcast events
-		OnCargoRemoved.Broadcast(Item, Quantity);
-		OnCargoSpaceChanged.Broadcast(GetAvailableCargoSpace());
-
-		return true;
 	}
 
-	return false;
+	UE_LOG(LogTemp, Log, TEXT("CargoComponent: Removed %d x %s (remaining: %d, available space: %.1f)"),
+		Quantity, *Item->ItemName.ToString(), GetItemQuantity(Item), GetAvailableCargoSpace());
+
+	// Broadcast events
+	OnCargoRemoved.Broadcast(Item, Quantity);
+	OnCargoSpaceChanged.Broadcast(GetAvailableCargoSpace());
+
+	return true;
 }
 
 void UCargoComponent::ClearCargo()
@@ -133,19 +223,51 @@ bool UCargoComponent::HasSpaceFor(UTradeItemDataAsset* Item, int32 Quantity) con
 
 int32 UCargoComponent::GetItemQuantity(UTradeItemDataAsset* Item) const
 {
-	if (!Item)
+	return CountItem(Item, true, true);
+}
+
+int32 UCargoComponent::GetCleanQuantity(UTradeItemDataAsset* Item) const
+{
+	return CountItem(Item, true, false);
+}
+
+int32 UCargoComponent::GetStolenQuantity(UTradeItemDataAsset* Item) const
+{
+	return CountItem(Item, false, true);
+}
+
+int32 UCargoComponent::GetTotalStolenUnits() const
+{
+	int32 Total = 0;
+	for (const FCargoEntry& Entry : CargoInventory)
 	{
-		return 0;
+		Total += Entry.IsStolen() ? Entry.Quantity : 0;
 	}
+	return Total;
+}
 
-	int32 EntryIndex = FindCargoEntryIndex(Item);
-
-	if (EntryIndex != INDEX_NONE)
+int32 UCargoComponent::GetTotalUnits() const
+{
+	int32 Total = 0;
+	for (const FCargoEntry& Entry : CargoInventory)
 	{
-		return CargoInventory[EntryIndex].Quantity;
+		Total += Entry.Quantity;
 	}
+	return Total;
+}
 
-	return 0;
+int32 UCargoComponent::CountItem(const UTradeItemDataAsset* Item, bool bClean, bool bStolen) const
+{
+	int32 Total = 0;
+	for (const FCargoEntry& Entry : CargoInventory)
+	{
+		if (Item && Entry.Item && (Entry.IsStolen() ? bStolen : bClean)
+			&& (Entry.Item == Item || IdsMatch(Entry.Item->ItemID, Item->ItemID)))
+		{
+			Total += Entry.Quantity;
+		}
+	}
+	return Total;
 }
 
 int32 UCargoComponent::GetItemQuantityByID(FName ItemID) const
@@ -210,7 +332,7 @@ bool UCargoComponent::RemoveCargoByID(FName ItemID, int32 Quantity)
 	return false;
 }
 
-int32 UCargoComponent::FindCargoEntryIndex(UTradeItemDataAsset* Item) const
+int32 UCargoComponent::FindCargoEntryIndex(UTradeItemDataAsset* Item, FName StolenFrom) const
 {
 	if (!Item)
 	{
@@ -219,14 +341,14 @@ int32 UCargoComponent::FindCargoEntryIndex(UTradeItemDataAsset* Item) const
 
 	for (int32 i = 0; i < CargoInventory.Num(); ++i)
 	{
-		if (CargoInventory[i].Item == Item)
+		if (CargoInventory[i].Item == Item && CargoInventory[i].StolenFrom == StolenFrom)
 		{
 			return i;
 		}
 	}
 	for (int32 i = 0; i < CargoInventory.Num(); ++i)
 	{
-		if (CargoInventory[i].Item && IdsMatch(CargoInventory[i].Item->ItemID, Item->ItemID))
+		if (CargoInventory[i].Item && CargoInventory[i].StolenFrom == StolenFrom && IdsMatch(CargoInventory[i].Item->ItemID, Item->ItemID))
 		{
 			return i;
 		}

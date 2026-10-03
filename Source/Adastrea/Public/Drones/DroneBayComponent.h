@@ -6,6 +6,8 @@
 
 class AAsteroid;
 class AShipDrone;
+class ACargoDrone;
+class ASpaceship;
 class UCargoComponent;
 class UTradeItemDataAsset;
 
@@ -18,7 +20,9 @@ enum class EDroneBayStatus : uint8
 	OutOfRange UMETA(DisplayName="Out Of Range"),
 	HoldFull   UMETA(DisplayName="Hold Full"),
 	Mining     UMETA(DisplayName="Mining"),
-	Recalling  UMETA(DisplayName="Recalling")
+	Recalling  UMETA(DisplayName="Recalling"),
+	/** Cargo drones moving goods to or from another ship. */
+	Transferring UMETA(DisplayName="Transferring Cargo")
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnOreMined, UTradeItemDataAsset*, Ore, int32, Amount);
@@ -33,6 +37,13 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnOreMined, UTradeItemDataAsset*, 
  * UCargoComponent, then go out again until the rock is spent, the hold is full,
  * or RecallDrones() is called. The component sits where the bay hatch is;
  * drones launch and land there.
+ *
+ * Cargo transfer: StartCargoTransfer() sends cargo drones (ACargoDrone) to another
+ * ship to take goods out of its hold (a wreck, or a ship with the same owner) or to
+ * give goods to it (same owner). A load at a time, until there's nothing left to
+ * move or no room for it. Goods taken from someone else's wreck are stolen
+ * (FCargoEntry::StolenFrom); pirate wrecks are fair salvage. Mining and transfers
+ * share the drones: starting one stops the other.
  */
 UCLASS(ClassGroup=(Drones), meta=(BlueprintSpawnableComponent))
 class ADASTREA_API UDroneBayComponent : public USceneComponent
@@ -134,6 +145,10 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Drones")
 	static FText StatusToText(EDroneBayStatus InStatus);
 
+	/** StatusToText, with the work named for the target: MINING, SKIMMING GAS or SALVAGING. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Drones")
+	FText GetStatusText() const;
+
 	/** Drones outside the bay (flying, cutting or landing). */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Drones")
 	int32 GetDronesOut() const;
@@ -182,6 +197,54 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Drones")
 	float GetSecondsSinceLastMined() const;
 
+	// ---- Cargo transfer ----
+
+	/** Cargo volume one cargo drone carries per trip. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Drones|Cargo", meta=(ClampMin="1.0"))
+	float CargoDroneLoad;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Drones|Cargo")
+	TSubclassOf<ACargoDrone> CargoDroneClass;
+
+	/** Whether cargo can be moved with Other now; OutReason says why not. */
+	bool CanTransferWith(const ASpaceship* Other, bool bTake, FText* OutReason = nullptr) const;
+
+	/**
+	 * Start moving cargo with Other: bTake pulls its hold into ours, otherwise ours goes
+	 * to it (only OnlyItem, if set). Recalls mining drones. Returns false (see
+	 * CanTransferWith) if the transfer isn't allowed.
+	 */
+	bool StartCargoTransfer(ASpaceship* Other, bool bTake, FName OnlyItem = NAME_None);
+
+	/** Stop sending drones; the ones out bring their loads home. */
+	UFUNCTION(BlueprintCallable, Category="Drones|Cargo")
+	void StopCargoTransfer();
+
+	/** A transfer job is on, or cargo drones are still out. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Drones|Cargo")
+	bool IsTransferring() const;
+
+	bool IsTransferTarget(const ASpaceship* Ship) const;
+	ASpaceship* GetTransferTarget() const;
+	bool IsTransferTake() const { return bTransferTake; }
+
+	/** Units moved by the current (or last) transfer. */
+	int32 GetTransferredUnits() const { return TransferredUnits; }
+
+	/** Organisation that goods taken from Other would be stolen from (None if they're fair to take). */
+	FName GetStolenTagFor(const ASpaceship* Other) const;
+
+	/** Fired when a transfer ends and every drone is home (units moved). */
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnCargoTransferFinished, int32);
+	FOnCargoTransferFinished OnCargoTransferFinished;
+
+	// ---- Used by ACargoDrone ----
+	void NotifyCargoDroneAtTarget(ACargoDrone* Drone, ASpaceship* Other);
+	void NotifyCargoDroneHome(ACargoDrone* Drone);
+	/** Load a landed drone for its next trip; false if the job is over. */
+	bool ReloadCargoDrone(ACargoDrone* Drone);
+	void NotifyCargoDroneStowed(ACargoDrone* Drone);
+
 	// ---- Used by AShipDrone ----
 
 	/** Rock the drones should be working, or null when they should come home. */
@@ -214,6 +277,17 @@ private:
 	UPROPERTY(Transient)
 	TArray<TObjectPtr<AShipDrone>> Drones;
 
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<ACargoDrone>> CargoDrones;
+
+	TWeakObjectPtr<ASpaceship> TransferTarget;
+	bool bTransferActive = false;
+	bool bTransferTake = true;
+	FName TransferItem;
+	FName TransferStolenFrom;
+	int32 TransferredUnits = 0;
+	float CargoLaunchCooldown = 0.0f;
+
 	/** Ore landed but not yet in the hold (part units, or no room). */
 	UPROPERTY(Transient)
 	TMap<TObjectPtr<UTradeItemDataAsset>, float> BayOre;
@@ -233,4 +307,15 @@ private:
 	void SetStatus(EDroneBayStatus NewStatus);
 	void FlushBayOre();
 	void LaunchOneDrone();
+
+	void TickCargoTransfer(float DeltaTime);
+	/** Something is left to move and there's room for it (counting loads in flight). */
+	bool HasTransferWorkLeft() const;
+	/** Volume aboard drones heading for the receiving hold. */
+	float GetInboundVolume() const;
+	/** Fill Drone's pod from the giving hold (the other ship's when taking, ours when giving). */
+	void FillCargoDrone(ACargoDrone* Drone, UCargoComponent* From, UCargoComponent* To);
+	/** Empty Drone's pod into a hold; what doesn't fit stays in the pod. Returns units moved. */
+	int32 EmptyCargoDrone(ACargoDrone* Drone, UCargoComponent* Into);
+	void LaunchCargoDrone();
 };

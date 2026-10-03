@@ -133,10 +133,10 @@ sessions happens in `AGENT_BOARD.md`.
 
 ## 🔨 Open work
 
-- **`CraftingManager` is unbuilt.** The recipe tree exists, but no C++ system runs crafting.
+- **Research.** `UCraftingManager` runs recipes at stations, but the 70 recipes that need
+  research stay locked: there is no research system yet.
 - **Packaged build needs a proper play-through.** It builds and boots, but visuals and
-  performance haven't been checked interactively, and the HUD shows object names instead of
-  station/ship names. See the known-issues list in
+  performance haven't been checked interactively. See the known-issues list in
   [PACKAGING.md](09-SETUP_GUIDES/PACKAGING.md#known-issues--remaining-blockers)
 - **Combat is being rebuilt (lean, X4-style).** Milestone 1 is done: fixed forward guns (hold LMB),
   bolts with hit flashes, shields that soak damage and recharge, armor, a lead pip and hit marker,
@@ -210,7 +210,7 @@ not dead code:
 | Way Network | Complete, disabled |
 | Full Save/Load | Live loop covered by save v2 (#509); not re-checked against every deferred system |
 | Multiplayer | Planned only |
-| Crafting (build execution) | Recipe tree done. C++ `CraftingManager` not built |
+| Crafting (build execution) | `UCraftingManager` runs timed jobs at station processing/fabrication modules (Production Floor screen); research-gated recipes locked |
 
 Choosing which of these turns "fly, dock, trade, mine, walk around" into a full game, rather than
 building all of them, is a product decision, not an engineering one.

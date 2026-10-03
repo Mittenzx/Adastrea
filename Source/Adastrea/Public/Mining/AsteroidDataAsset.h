@@ -8,6 +8,22 @@ class UStaticMesh;
 class UMaterialInterface;
 class UTradeItemDataAsset;
 
+/** What a field object is made of, which decides how drones work it. */
+UENUM(BlueprintType)
+enum class EResourceKind : uint8
+{
+	/** Worked out from the ore item (gases, salvage, ice; everything else is rock). */
+	Auto,
+	/** Drones clamp on and drill. */
+	Rock,
+	/** Drones clamp on and drill (cuts easily). */
+	Ice,
+	/** Gas pocket: drones fly into it and draw gas through their intakes; no clamping, no drilling. */
+	Gas,
+	/** Wreck debris: drones clamp on and cut plate and parts free (the mining behaviour). */
+	Salvage,
+};
+
 /**
  * Data-driven asteroid type (rocky iron, copper-bearing, titanium-rich, icy...).
  * The ore it yields is a real trade item data asset, so mined ore is the same
@@ -63,6 +79,14 @@ public:
 	/** Colour of the ore veins / HUD tint for this type. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Visual")
 	FLinearColor OreTint;
+
+	/** Rock, ice, gas pocket or wreck debris. Auto works it out from OreItem. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ore")
+	EResourceKind ResourceKind = EResourceKind::Auto;
+
+	/** ResourceKind, with Auto resolved from the ore item's id. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ore")
+	EResourceKind GetResourceKind() const;
 
 	/** Total ore units for a rock at the given scale. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ore")

@@ -18,7 +18,7 @@ enum class EShipDroneState : uint8
 	Launching,
 	/** Flying to a spot on the rock. */
 	Outbound,
-	/** Clamped to the rock, drilling ore into the hopper. */
+	/** Clamped to the rock, drilling ore into the hopper (or, in a gas pocket, drawing gas in). */
 	Cutting,
 	/** Flying back to the hatch approach point. */
 	Returning,
@@ -30,6 +30,11 @@ enum class EShipDroneState : uint8
  * A mining drone launched from a UDroneBayComponent. Flies kinematically (no
  * collision), drills a spot on its bay's target rock until the hopper is full
  * or the rock is spent, then flies home and unloads. Destroyed when stowed.
+ *
+ * Gas pockets are skimmed, not drilled: the drone flies inside the pocket, turns
+ * its clamp ring into a spinning intake fan and drifts slowly while it fills.
+ * Wreck debris and ice are cut like rock (salvage cutting is drilling with a
+ * different name on the HUD).
  */
 UCLASS()
 class ADASTREA_API AShipDrone : public AActor
@@ -101,6 +106,8 @@ private:
 	float WorkSurfaceFraction;
 	float OreAboard;
 	float StateTime;
+	/** Working a gas pocket: fly inside it and draw gas through the intake instead of clamping and drilling. */
+	bool bSkimming = false;
 
 	void SetState(EShipDroneState NewState);
 	void SetCutting(bool bCutting);

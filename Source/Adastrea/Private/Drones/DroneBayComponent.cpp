@@ -1,5 +1,8 @@
 #include "Drones/DroneBayComponent.h"
 #include "Drones/ShipDrone.h"
+#include "Drones/CargoDrone.h"
+#include "Universe/OrganisationSubsystem.h"
+#include "Universe/PirateSubsystem.h"
 #include "Mining/Asteroid.h"
 #include "Mining/AsteroidDataAsset.h"
 #include "Interfaces/ITargetable.h"
@@ -40,6 +43,8 @@ UDroneBayComponent::UDroneBayComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	PrimaryComponentTick.bStartWithTickEnabled = true;
+	CargoDroneLoad = 25.0f;
+	CargoDroneClass = ACargoDrone::StaticClass();
 }
 
 void UDroneBayComponent::BeginPlay()
@@ -84,6 +89,14 @@ void UDroneBayComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		}
 	}
 	Drones.Reset();
+	for (ACargoDrone* Drone : CargoDrones)
+	{
+		if (IsValid(Drone))
+		{
+			Drone->Destroy();
+		}
+	}
+	CargoDrones.Reset();
 	Super::EndPlay(EndPlayReason);
 }
 
@@ -304,8 +317,21 @@ FText UDroneBayComponent::StatusToText(EDroneBayStatus InStatus)
 	case EDroneBayStatus::HoldFull:   return FText::FromString(TEXT("HOLD FULL"));
 	case EDroneBayStatus::Mining:     return FText::FromString(TEXT("MINING"));
 	case EDroneBayStatus::Recalling:  return FText::FromString(TEXT("RECALLING"));
+	case EDroneBayStatus::Transferring: return FText::FromString(TEXT("TRANSFERRING CARGO"));
 	}
 	return FText::GetEmpty();
+}
+
+FText UDroneBayComponent::GetStatusText() const
+{
+	const AAsteroid* Rock = Status == EDroneBayStatus::Mining ? Cast<AAsteroid>(Target.Get()) : nullptr;
+	const UAsteroidDataAsset* Type = Rock ? Rock->GetAsteroidType() : nullptr;
+	switch (Type ? Type->GetResourceKind() : EResourceKind::Rock)
+	{
+	case EResourceKind::Gas:     return FText::FromString(TEXT("SKIMMING GAS"));
+	case EResourceKind::Salvage: return FText::FromString(TEXT("SALVAGING"));
+	default:                     return StatusToText(Status);
+	}
 }
 
 void UDroneBayComponent::SetStatus(EDroneBayStatus NewStatus)
@@ -394,6 +420,7 @@ void UDroneBayComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	Drones.RemoveAll([](const AShipDrone* Drone) { return !IsValid(Drone); });
+	CargoDrones.RemoveAll([](const ACargoDrone* Drone) { return !IsValid(Drone); });
 	FlushBayOre();
 
 	if (!bMiningEnabled)
@@ -414,6 +441,22 @@ void UDroneBayComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 				Drone->ForceStow();
 			}
 		}
+		StopCargoTransfer();
+		for (ACargoDrone* Drone : TArray<TObjectPtr<ACargoDrone>>(CargoDrones))
+		{
+			if (IsValid(Drone))
+			{
+				Drone->ForceStow();
+			}
+		}
+	}
+
+	// Cargo drones out: the bay is busy moving cargo, not mining.
+	TickCargoTransfer(DeltaTime);
+	if (IsTransferring())
+	{
+		SetStatus(EDroneBayStatus::Transferring);
+		return;
 	}
 
 	// A spent rock ends the job: the drones come home.
@@ -467,5 +510,348 @@ void UDroneBayComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	{
 		LaunchOneDrone();
 		LaunchCooldown = LaunchInterval;
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Cargo transfer
+// ---------------------------------------------------------------------------
+
+namespace
+{
+	UCargoComponent* HoldOf(const AActor* Actor)
+	{
+		return Actor ? Actor->FindComponentByClass<UCargoComponent>() : nullptr;
+	}
+}
+
+FName UDroneBayComponent::GetStolenTagFor(const ASpaceship* Other) const
+{
+	const UOrganisationSubsystem* Orgs = UOrganisationSubsystem::Get(this);
+	if (!Orgs || !Other)
+	{
+		return NAME_None;
+	}
+	const FName Owner = Orgs->GetOwnerIdOf(Other);
+	if (Owner.IsNone() || Owner == Orgs->GetOwnerIdOf(GetOwner()))
+	{
+		return NAME_None;
+	}
+	// Pirates have no claim anyone would honour: their wrecks are salvage.
+	const UPirateSubsystem* Pirates = UPirateSubsystem::Get(this);
+	return Pirates && Pirates->IsPirate(Owner) ? NAME_None : Owner;
+}
+
+bool UDroneBayComponent::CanTransferWith(const ASpaceship* Other, bool bTake, FText* OutReason) const
+{
+	auto Fail = [OutReason](const FString& Why)
+	{
+		if (OutReason)
+		{
+			*OutReason = FText::FromString(Why);
+		}
+		return false;
+	};
+	const ASpaceship* Self = Cast<ASpaceship>(GetOwner());
+	const UCargoComponent* Mine = HoldOf(Self);
+	const UCargoComponent* Theirs = HoldOf(Other);
+	if (!bMiningEnabled || DroneCount <= 0)
+	{
+		return Fail(TEXT("This ship has no drones"));
+	}
+	if (!Self || !Other || Other == Self || !Mine || !Theirs)
+	{
+		return Fail(TEXT("No cargo hold to work with"));
+	}
+	if (Self->IsDocked() || Self->IsDocking() || Other->IsDocked())
+	{
+		return Fail(TEXT("Can't send drones while docked"));
+	}
+	if (FVector::Dist(GetHatchLocation(), Other->GetActorLocation()) > Range)
+	{
+		return Fail(FString::Printf(TEXT("Too far for the drones (%.0f m max)"), Range / 100.0f));
+	}
+	const UOrganisationSubsystem* Orgs = UOrganisationSubsystem::Get(this);
+	const bool bSameOwner = Orgs && Orgs->GetOwnerIdOf(Other) == Orgs->GetOwnerIdOf(Self);
+	if (bTake && !Other->IsWrecked() && !bSameOwner)
+	{
+		return Fail(TEXT("Drones only take cargo from wrecks and your own ships"));
+	}
+	if (!bTake && !bSameOwner)
+	{
+		return Fail(TEXT("Drones only hand cargo to your own ships"));
+	}
+	if ((bTake ? Theirs : Mine)->GetTotalUnits() <= 0)
+	{
+		return Fail(bTake ? TEXT("Its hold is empty") : TEXT("Your hold is empty"));
+	}
+	return true;
+}
+
+bool UDroneBayComponent::StartCargoTransfer(ASpaceship* Other, bool bTake, FName OnlyItem)
+{
+	FText Reason;
+	if (!CanTransferWith(Other, bTake, &Reason))
+	{
+		UE_LOG(LogAdastrea, Log, TEXT("DroneBay: cargo transfer with %s refused: %s"), *GetNameSafe(Other), *Reason.ToString());
+		return false;
+	}
+	RecallDrones(); // the mining drones come home; the cargo drones take over
+	TransferTarget = Other;
+	bTransferActive = true;
+	bTransferTake = bTake;
+	TransferItem = OnlyItem;
+	TransferStolenFrom = bTake ? GetStolenTagFor(Other) : NAME_None;
+	TransferredUnits = 0;
+	CargoLaunchCooldown = 0.0f;
+	UE_LOG(LogAdastrea, Log, TEXT("DroneBay: cargo transfer %s %s%s"), bTake ? TEXT("from") : TEXT("to"), *Other->GetName(),
+		TransferStolenFrom.IsNone() ? TEXT("") : *FString::Printf(TEXT(" (goods stolen from %s)"), *TransferStolenFrom.ToString()));
+	return true;
+}
+
+void UDroneBayComponent::StopCargoTransfer()
+{
+	if (bTransferActive)
+	{
+		UE_LOG(LogAdastrea, Log, TEXT("DroneBay: cargo transfer with %s stopped, %d units moved so far"), *GetNameSafe(TransferTarget.Get()), TransferredUnits);
+	}
+	bTransferActive = false;
+}
+
+bool UDroneBayComponent::IsTransferring() const
+{
+	return bTransferActive || !CargoDrones.IsEmpty();
+}
+
+bool UDroneBayComponent::IsTransferTarget(const ASpaceship* Ship) const
+{
+	return bTransferActive && Ship && TransferTarget.Get() == Ship;
+}
+
+ASpaceship* UDroneBayComponent::GetTransferTarget() const
+{
+	return TransferTarget.Get();
+}
+
+float UDroneBayComponent::GetInboundVolume() const
+{
+	// Taking, loaded drones are on their way home; giving, on their way out. Either way the
+	// receiving hold must keep room for them.
+	float Volume = 0.0f;
+	for (const ACargoDrone* Drone : CargoDrones)
+	{
+		Volume += IsValid(Drone) ? Drone->GetLoadVolume() : 0.0f;
+	}
+	return Volume;
+}
+
+bool UDroneBayComponent::HasTransferWorkLeft() const
+{
+	const UCargoComponent* Mine = HoldOf(GetOwner());
+	const UCargoComponent* Theirs = HoldOf(TransferTarget.Get());
+	if (!Mine || !Theirs)
+	{
+		return false;
+	}
+	const UCargoComponent* From = bTransferTake ? Theirs : Mine;
+	const UCargoComponent* To = bTransferTake ? Mine : Theirs;
+	bool bAnything = false;
+	float Smallest = TNumericLimits<float>::Max();
+	for (const FCargoEntry& Entry : From->CargoInventory)
+	{
+		if (Entry.Item && Entry.Quantity > 0 && (TransferItem.IsNone() || UTradeItemDataAsset::ItemIdsMatch(Entry.Item->ItemID, TransferItem)))
+		{
+			bAnything = true;
+			Smallest = FMath::Min(Smallest, Entry.Item->VolumePerUnit);
+		}
+	}
+	return bAnything && To->GetAvailableCargoSpace() - GetInboundVolume() >= Smallest;
+}
+
+void UDroneBayComponent::FillCargoDrone(ACargoDrone* Drone, UCargoComponent* From, UCargoComponent* To)
+{
+	if (!Drone || !From || !To)
+	{
+		return;
+	}
+	// Room left in the receiving hold, less what other drones are already bringing it.
+	const float Room = FMath::Min(CargoDroneLoad, To->GetAvailableCargoSpace() - GetInboundVolume());
+	if (Room <= KINDA_SMALL_NUMBER)
+	{
+		return;
+	}
+	if (TransferItem.IsNone())
+	{
+		Drone->Load = From->TakeLoad(Room);
+	}
+	else
+	{
+		// Only the chosen goods: set the rest aside, take, and put them back.
+		TArray<FCargoEntry> Kept;
+		for (int32 i = From->CargoInventory.Num() - 1; i >= 0; --i)
+		{
+			const FCargoEntry& Entry = From->CargoInventory[i];
+			if (!Entry.Item || !UTradeItemDataAsset::ItemIdsMatch(Entry.Item->ItemID, TransferItem))
+			{
+				Kept.Insert(Entry, 0);
+				From->CargoInventory.RemoveAt(i);
+			}
+		}
+		Drone->Load = From->TakeLoad(Room);
+		From->CargoInventory.Append(Kept);
+	}
+	if (!TransferStolenFrom.IsNone())
+	{
+		for (FCargoEntry& Entry : Drone->Load)
+		{
+			if (!Entry.IsStolen())
+			{
+				Entry.StolenFrom = TransferStolenFrom;
+			}
+		}
+	}
+}
+
+int32 UDroneBayComponent::EmptyCargoDrone(ACargoDrone* Drone, UCargoComponent* Into)
+{
+	int32 Moved = 0;
+	if (!Drone || !Into)
+	{
+		return Moved;
+	}
+	for (int32 i = 0; i < Drone->Load.Num(); ++i)
+	{
+		FCargoEntry& Entry = Drone->Load[i];
+		int32 Units = Entry.Quantity;
+		while (Units > 0 && !Into->HasSpaceFor(Entry.Item, Units))
+		{
+			--Units;
+		}
+		if (Units > 0 && Into->AddEntry(FCargoEntry(Entry.Item, Units, Entry.StolenFrom)))
+		{
+			Entry.Quantity -= Units;
+			Moved += Units;
+		}
+		if (Entry.Quantity <= 0)
+		{
+			Drone->Load.RemoveAt(i--);
+		}
+	}
+	return Moved;
+}
+
+void UDroneBayComponent::NotifyCargoDroneAtTarget(ACargoDrone* Drone, ASpaceship* Other)
+{
+	UCargoComponent* Theirs = HoldOf(Other);
+	if (bTransferTake)
+	{
+		FillCargoDrone(Drone, Theirs, HoldOf(GetOwner()));
+	}
+	else
+	{
+		TransferredUnits += EmptyCargoDrone(Drone, Theirs);
+	}
+}
+
+void UDroneBayComponent::NotifyCargoDroneHome(ACargoDrone* Drone)
+{
+	// Taking, this is the load; giving, it's whatever didn't fit over there.
+	const int32 Moved = EmptyCargoDrone(Drone, HoldOf(GetOwner()));
+	if (bTransferTake)
+	{
+		TransferredUnits += Moved;
+	}
+	if (Drone && !Drone->Load.IsEmpty())
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("DroneBay: no room aboard for a cargo drone's load; %d stacks lost"), Drone->Load.Num());
+		Drone->Load.Reset();
+	}
+}
+
+bool UDroneBayComponent::ReloadCargoDrone(ACargoDrone* Drone)
+{
+	if (!bTransferActive || !HasTransferWorkLeft())
+	{
+		return false;
+	}
+	if (!bTransferTake)
+	{
+		FillCargoDrone(Drone, HoldOf(GetOwner()), HoldOf(TransferTarget.Get()));
+		return Drone && !Drone->Load.IsEmpty();
+	}
+	return true;
+}
+
+void UDroneBayComponent::NotifyCargoDroneStowed(ACargoDrone* Drone)
+{
+	CargoDrones.Remove(Drone);
+}
+
+void UDroneBayComponent::LaunchCargoDrone()
+{
+	UWorld* World = GetWorld();
+	ASpaceship* Other = TransferTarget.Get();
+	if (!World || !CargoDroneClass || !Other)
+	{
+		return;
+	}
+	FActorSpawnParameters Params;
+	Params.Owner = GetOwner();
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	const FRotator Facing = GetOwner() ? GetOwner()->GetActorRotation() : GetComponentRotation();
+	ACargoDrone* Drone = World->SpawnActor<ACargoDrone>(CargoDroneClass, GetHatchLocation(), Facing, Params);
+	if (!Drone)
+	{
+		return;
+	}
+	if (!bTransferTake)
+	{
+		FillCargoDrone(Drone, HoldOf(GetOwner()), HoldOf(Other));
+		if (Drone->Load.IsEmpty())
+		{
+			Drone->Destroy();
+			return;
+		}
+	}
+	Drone->InitDrone(this, Other, CargoDrones.Num());
+	CargoDrones.Add(Drone);
+}
+
+void UDroneBayComponent::TickCargoTransfer(float DeltaTime)
+{
+	if (bTransferActive)
+	{
+		FText Reason;
+		ASpaceship* Other = TransferTarget.Get();
+		if (!Other || !CanTransferWith(Other, bTransferTake, &Reason))
+		{
+			// Done (hold emptied), or the other ship left, docked or drifted out of range.
+			UE_LOG(LogAdastrea, Log, TEXT("DroneBay: cargo transfer ends: %s"), Other ? *Reason.ToString() : TEXT("other ship gone"));
+			StopCargoTransfer();
+		}
+		else if (!HasTransferWorkLeft())
+		{
+			// Nothing more to send; the drones out finish their trips first.
+			if (CargoDrones.IsEmpty())
+			{
+				StopCargoTransfer();
+			}
+		}
+		else
+		{
+			CargoLaunchCooldown -= DeltaTime;
+			if (CargoDrones.Num() < DroneCount && CargoLaunchCooldown <= 0.0f)
+			{
+				LaunchCargoDrone();
+				CargoLaunchCooldown = LaunchInterval;
+			}
+		}
+	}
+	if (!bTransferActive && TransferTarget.IsValid() && CargoDrones.IsEmpty())
+	{
+		// The job is over and the last drone is home.
+		UE_LOG(LogAdastrea, Log, TEXT("DroneBay: cargo transfer complete, %d units moved"), TransferredUnits);
+		TransferTarget = nullptr;
+		OnCargoTransferFinished.Broadcast(TransferredUnits);
 	}
 }
