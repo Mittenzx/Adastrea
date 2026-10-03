@@ -4,7 +4,7 @@ Design for what combat is *for*: who attacks whom, why, and what happens afterwa
 Builds on the combat rebuild (guns, shields, wrecks, station turrets, player rescue) and on
 `UOrganisationSubsystem` (Authorities, independent orgs, owned ship records).
 
-Status: design agreed 2026-10-02. Built so far: steps 1 and 2 of the build order (marked **Built**).
+Status: design agreed 2026-10-02. Built so far: steps 1 to 3 of the build order (marked **Built**).
 
 ## Setting: people are the scarcest resource
 
@@ -145,6 +145,29 @@ way, are worth more. Roughly most valuable first:
 - Lawful stations scan on docking: confiscate, fine, lower standing with that Authority.
 - **Fences** (independent stations and guild hub ships) buy stolen cargo at a discount.
 
+### 3a. Built (step 3)
+
+- **Tag.** `FCargoEntry::StolenFrom` names the organisation the goods were taken from; stolen
+  and clean units of one item are separate stacks, and saves keep the tag. Today the player
+  gets stolen goods by sending **cargo drones** to strip the hold of someone else's wreck
+  (`UDroneBayComponent::StartCargoTransfer`; lock the wreck and press the drone key). Goods
+  that were already stolen keep their original owner. Pirate wrecks are fair salvage: no tag.
+  Pirates' own loot still goes straight to their needs (step 2), so it is never in a hold.
+- **Law.** `ASpaceStation::Law` is Auto, Lawful or Fence. Auto: High and Medium security
+  sectors are Lawful, Low and None are fences; pirate-owned stations and stations whose market
+  is a Black Market are always fences.
+- **Customs.** Docking at a lawful station confiscates every stolen unit and fines the
+  trader `StolenGoodsFineRate` (50%) of the goods' base value, as much as they can pay. The
+  fine goes to the station's owner. "Customs seized N units..." shows on the HUD.
+- **Fences.** A fence's market (`UMarketDataAsset::bBuysStolenGoods`) buys stolen units at
+  `FenceRate` (55%) of its normal price; lawful markets only buy clean units
+  (`UPlayerTraderComponent::GetSellableQuantity`). Selling uses clean units first.
+- **Not yet:** standing loss with the Authority (step 4), and fences on independent stations
+  that sit in secure space (set `Law = Fence` on the station by hand until step 4).
+- **Console:** `adastrea.AddCargo Item Units [StolenFrom]`, `adastrea.CargoInfo`,
+  `adastrea.WreckShip [Name] [Item Units]`, `adastrea.CargoTransfer take|give [Name] [Item]`,
+  `adastrea.MarketInfo [raw|all|Filter]`, and `adastrea.Security 0-3` to try both kinds of station.
+
 ## 4. Boarding and capture
 
 - **Boarding is automatic.** When a ship is disabled and a ship that can board (a boarding
@@ -200,7 +223,7 @@ way, are worth more. Roughly most valuable first:
 1. Sector security level and Authority patrols that answer beacons
 2. **Built.** Pirate organisation with need levels; raider AI: choose a target by need → demand
    → disable → drone loot → retreat
-3. Stolen tag on cargo, lawful station scans, fence markets
+3. **Built.** Stolen tag on cargo, lawful station scans, fence markets
 4. Standing with each organisation instead of fixed sides; witnesses; the player can turn pirate
 5. Automatic boarding, change of ownership, registration, independent refit yards
 6. Player capture: kill-switch ship and working off the debt

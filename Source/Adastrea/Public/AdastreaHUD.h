@@ -106,7 +106,7 @@ public:
 	void HidePauseMenu() { bShowPauseMenu = false; }
 
 	/** True while any other full-screen canvas screen (map, station menu, trade, ship select, station info) is up. */
-	bool IsOtherScreenOpen() const { return bShowMap || bShowStationMenu || bShowTradeScreen || bShowOutfitting || bShowShipSelect || bShowStationInfo; }
+	bool IsOtherScreenOpen() const { return bShowMap || bShowStationMenu || bShowTradeScreen || bShowOutfitting || bShowCrafting || bShowShipSelect || bShowStationInfo; }
 
 	/** Move the highlighted row up/down (wraps). */
 	void MovePauseMenuSelection(int32 Step);
@@ -274,7 +274,7 @@ public:
 
 	/** Open the station menu (called on docking, and when leaving a sub-screen). */
 	UFUNCTION(BlueprintCallable, Category="HUD|StationMenu")
-	void ShowStationMenu() { bShowStationMenu = true; bShowTradeScreen = false; bShowOutfitting = false; StationMenuIndex = 0; }
+	void ShowStationMenu() { bShowStationMenu = true; bShowTradeScreen = false; bShowOutfitting = false; bShowCrafting = false; StationMenuIndex = 0; }
 
 	UFUNCTION(BlueprintCallable, Category="HUD|StationMenu")
 	void HideStationMenu() { bShowStationMenu = false; }
@@ -355,6 +355,50 @@ public:
 
 	/** Draw the outfitting screen. */
 	void DrawOutfittingScreen(APlayerController* PC, ASpaceship* Ship);
+
+	// ========================
+	// PRODUCTION SCREEN (docked; queue crafting-tree recipes at the station's
+	// processing / fabrication modules - AdastreaHUD_Crafting.cpp, UCraftingManager)
+	// ========================
+
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Production")
+	bool bShowCrafting = false;
+
+	/** Selected facility tab (Processing, Fabrication...). */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Production")
+	int32 CraftingFacilityIndex = 0;
+
+	/** Selected recipe row, or job row while bCraftingJobsFocus. */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Production")
+	int32 CraftingRowIndex = 0;
+
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Production")
+	int32 CraftingJobIndex = 0;
+
+	/** B: the up/down keys move through the job queue instead of the recipes. */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Production")
+	bool bCraftingJobsFocus = false;
+
+	UFUNCTION(BlueprintCallable, Category="HUD|Production")
+	void ShowCrafting();
+
+	UFUNCTION(BlueprintCallable, Category="HUD|Production")
+	void HideCrafting() { bShowCrafting = false; }
+
+	/** Whether the docked station has a module that makes anything. */
+	bool IsCraftingAvailable(APlayerController* PC) const;
+
+	void MoveCraftingSelection(int32 Step);
+	void MoveCraftingFacility(int32 Step);
+	void ToggleCraftingFocus() { bCraftingJobsFocus = !bCraftingJobsFocus; }
+
+	/** Queue Runs runs of the selected recipe (0 = as many as the hold allows). */
+	void QueueCraftingSelection(APlayerController* PC, int32 Runs);
+
+	/** X on the job list: cancel the selected job. */
+	void CancelCraftingSelection(APlayerController* PC);
+
+	void DrawCraftingScreen(APlayerController* PC, ASpaceship* Ship);
 
 	// ========================
 	// SHIP SELECT SCREEN (concept prototype — later reused at construction
@@ -535,6 +579,7 @@ private:
 		bool bMap = false;
 		bool bTradeScreen = false;
 		bool bOutfitting = false;
+		bool bCrafting = false;
 		bool bStationMenu = false;
 		bool bShipSelect = false;
 		bool bStationInfo = false;
@@ -543,6 +588,7 @@ private:
 		int32 TradeIndex = 0;
 		int32 OutfittingCategory = 0;
 		int32 OutfittingRow = 0;
+		int32 CraftingRow = 0;
 		int32 ShipSelectIndex = 0;
 	};
 	FMenuAudioState MenuAudioState;

@@ -13,6 +13,7 @@
 #include "Stations/SpaceStation.h"
 #include "Stations/DockingBayModule.h"
 #include "Trading/CargoComponent.h"
+#include "Trading/CraftingManager.h"
 #include "Trading/CraftingTreeLoader.h"
 #include "Trading/PlayerTraderComponent.h"
 #include "Trading/TradeItemDataAsset.h"
@@ -210,6 +211,10 @@ bool USaveGameSubsystem::LoadGame(const FString& SlotName)
 		{
 			Pirates->ImportState(CurrentSaveGame->Organisations.PirateNeeds);
 		}
+	}
+	if (UCraftingManager* Crafting = GetGameInstance()->GetSubsystem<UCraftingManager>())
+	{
+		Crafting->ImportJobs(CurrentSaveGame->CraftingJobs);
 	}
 
 	// Reset playtime tracking
@@ -474,6 +479,10 @@ void USaveGameSubsystem::CollectGameState(UAdastreaSaveGame* SaveGameObject)
 	{
 		Pirates->ExportState(SaveGameObject->Organisations.PirateNeeds);
 	}
+	if (const UCraftingManager* Crafting = GetGameInstance()->GetSubsystem<UCraftingManager>())
+	{
+		Crafting->ExportJobs(SaveGameObject->CraftingJobs);
+	}
 
 	// Stations first: CollectPlayerShip refers to them by index for docking.
 	CollectStations(SaveGameObject);
@@ -502,6 +511,7 @@ void USaveGameSubsystem::ApplyGameState(UAdastreaSaveGame* SaveGameObject)
 	// Applying a save undocks/re-docks the ship, rebuilds stations and rewrites the
 	// wallet; none of that should sound. The controller plays UI.QuickLoad after.
 	const UAudioEventLibrary::FScopedMute MuteGameplayAudio;
+	TGuardValue<bool> ApplyingSave(bApplyingSave, true);
 
 	// Get player controller and pawn
 	APlayerController* PC = UGameplayStatics::GetPlayerController(World, 0);
@@ -769,6 +779,7 @@ void USaveGameSubsystem::CollectPlayerShip(ASpaceship* Ship, UAdastreaSaveGame* 
 				SavedEntry.ItemAsset = FSoftObjectPath(Entry.Item.Get());
 			}
 			SavedEntry.Quantity = Entry.Quantity;
+			SavedEntry.StolenFrom = Entry.StolenFrom;
 		}
 	}
 
@@ -1008,7 +1019,7 @@ void USaveGameSubsystem::ApplyShipCreditsAndCargo(ASpaceship* Ship, const FSaved
 				*Entry.ItemID.ToString(), Entry.Quantity);
 			continue;
 		}
-		if (!Cargo->AddCargo(Item, Entry.Quantity))
+		if (!Cargo->AddStolenCargo(Item, Entry.Quantity, Entry.StolenFrom))
 		{
 			UE_LOG(LogAdastrea, Warning, TEXT("SaveGameSubsystem: No hold space for %d x %s; dropped"),
 				Entry.Quantity, *Entry.ItemID.ToString());

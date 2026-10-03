@@ -1,6 +1,7 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
 #include "Stations/ProcessingModule.h"
+#include "Trading/CraftingManager.h"
 #include "UObject/UObjectGlobals.h"
 
 AProcessingModule::AProcessingModule()
@@ -48,18 +49,14 @@ int32 AProcessingModule::Process(int32 Amount)
 
 UCraftingTreeLoader* AProcessingModule::GetCraftingLoader() const
 {
-    UCraftingTreeLoader* Loader = NewObject<UCraftingTreeLoader>(GetTransientPackage());
-    if (Loader)
+    // One shared crafting tree (UCraftingManager), not a fresh JSON parse per call.
+    if (const UCraftingManager* Crafting = UCraftingManager::Get(this))
     {
-        if (!Loader->IsLoaded())
-        {
-            Loader->LoadCraftingTree();
-        }
-        if (Loader->GetLoadedRecipeCount() == 0)
-        {
-            Loader->LoadRecipes();
-        }
+        return Crafting->GetLoader();
     }
+    UCraftingTreeLoader* Loader = NewObject<UCraftingTreeLoader>(GetTransientPackage());
+    Loader->LoadCraftingTree();
+    Loader->LoadRecipes();
     return Loader;
 }
 

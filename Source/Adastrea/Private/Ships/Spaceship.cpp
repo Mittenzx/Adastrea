@@ -1,4 +1,5 @@
 #include "Ships/Spaceship.h"
+#include "AdastreaNames.h"
 #include "Stations/DockingDebug.h"
 #include "Ships/SpaceshipInterior.h"
 #include "Ships/SpaceshipDataAsset.h"
@@ -6,6 +7,8 @@
 #include "Ships/SpaceshipControlsComponent.h"
 #include "Player/AdastreaPlayerController.h"
 #include "AdastreaHUD.h"
+#include "Player/SaveGameSubsystem.h"
+#include "Universe/OrganisationSubsystem.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
@@ -204,6 +207,26 @@ ASpaceship::ASpaceship()
 void ASpaceship::BeginPlay()
 {
     Super::BeginPlay();
+
+    // Cargo drones home from a transfer: tell the player what came aboard.
+    if (DroneBay)
+    {
+        DroneBay->OnCargoTransferFinished.AddWeakLambda(this, [this](int32 Units)
+        {
+            APlayerController* PC = Cast<APlayerController>(GetController());
+            AAdastreaHUD* HUD = PC && PC->IsLocalController() ? Cast<AAdastreaHUD>(PC->GetHUD()) : nullptr;
+            if (!HUD)
+            {
+                return;
+            }
+            const int32 Stolen = CargoComponent ? CargoComponent->GetTotalStolenUnits() : 0;
+            HUD->ShowMessage(Units <= 0 ? FString(TEXT("Cargo drones are home: nothing moved"))
+                : DroneBay->IsTransferTake()
+                    ? FString::Printf(TEXT("Cargo drones are home with %d units%s"), Units,
+                        Stolen > 0 ? TEXT(": stolen goods are seized at lawful stations, fences buy them") : TEXT(""))
+                    : FString::Printf(TEXT("Cargo drones delivered %d units"), Units), 5.0f, false);
+        });
+    }
 
     // Nav lights, strobes, beacons and a sensor fit traced onto the hull, unless the
     // Blueprint already places its own dressing component.
@@ -575,6 +598,29 @@ void ASpaceship::LaunchDrones()
     {
         return;
     }
+    // A ship picked with the target keys: the drones go to work on its hold instead
+    // (strip a wreck, or empty one of your own ships).
+    if (const AAdastreaPlayerController* PC = Cast<AAdastreaPlayerController>(GetController()))
+    {
+        // A wreck with nothing left to take falls through to mining when a rock is locked.
+        ASpaceship* Other = Cast<ASpaceship>(PC->GetLockedTarget());
+        if (Other && (DroneBay->CanTransferWith(Other, true) || (Other->IsWrecked() && !DroneBay->GetTarget())))
+        {
+            FText Why;
+            const bool bOk = DroneBay->CanTransferWith(Other, true, &Why) && DroneBay->StartCargoTransfer(Other, true);
+            if (AAdastreaHUD* HUD = Cast<AAdastreaHUD>(PC->GetHUD()))
+            {
+                const FName StolenFrom = DroneBay->GetStolenTagFor(Other);
+                const UOrganisationSubsystem* Orgs = UOrganisationSubsystem::Get(this);
+                HUD->ShowMessage(!bOk ? Why.ToString()
+                    : StolenFrom.IsNone() ? FString(TEXT("Cargo drones away: emptying its hold"))
+                    : FString::Printf(TEXT("Cargo drones away: this hold belongs to %s, so what you take is stolen"),
+                        Orgs ? *Orgs->GetOrgDisplayName(StolenFrom).ToString() : *StolenFrom.ToString()),
+                    4.0f, !bOk);
+            }
+            return;
+        }
+    }
     // An asteroid picked with the target cycle keys is the job, unless the bay already has one.
     if (!DroneBay->GetTarget())
     {
@@ -599,6 +645,12 @@ void ASpaceship::RecallDrones()
 
 void ASpaceship::ToggleDrones()
 {
+    if (DroneBay && DroneBay->IsTransferring())
+    {
+        // Second press: stop the transfer; drones out bring their loads home.
+        DroneBay->StopCargoTransfer();
+        return;
+    }
     if (DroneBay && DroneBay->IsDeployed())
     {
         RecallDrones();
@@ -1285,15 +1337,14 @@ void ASpaceship::ShowHUDAlert(const FText& Message, float Duration, bool bIsWarn
 FText ASpaceship::GetShipName() const
 {
     // If we have a data asset, use its name
-    if (ShipDataAsset)
+    if (ShipDataAsset && !ShipDataAsset->ShipName.IsEmpty())
     {
         return ShipDataAsset->ShipName;
     }
 
-    // Otherwise, use the actor's label or name
-    FString ActorName = GetName();
-
-    return FText::FromString(ActorName);
+    // Otherwise the class name made readable ("BP_Scout_C_3" -> "Scout"): object
+    // names are not for players.
+    return FText::FromString(AdastreaNames::Readable(GetClass()->GetName()));
 }
 
 FText ASpaceship::GetShipClass() const
@@ -2940,6 +2991,17 @@ void ASpaceship::CompleteDocking()
             {
                 GameHUD->ShowStationMenu();
                 UE_LOG(LogAdastreaShips, Log, TEXT("ASpaceship::CompleteDocking - Opened station services menu"));
+
+                // Customs: lawful stations take stolen cargo off docking ships, and fine them.
+                // (Not when a load re-docks the ship: it was already docked when saved.)
+                ASpaceStation* Station = GetDockedStation();
+                const USaveGameSubsystem* Saves = GetGameInstance() ? GetGameInstance()->GetSubsystem<USaveGameSubsystem>() : nullptr;
+                const FCustomsResult Customs = Station && !(Saves && Saves->IsApplyingSave()) ? Station->ScanDockedShip(this) : FCustomsResult();
+                if (Customs.UnitsConfiscated > 0)
+                {
+                    GameHUD->ShowMessage(FString::Printf(TEXT("Customs seized %d units of stolen cargo and fined you %s cr"),
+                        Customs.UnitsConfiscated, *FText::AsNumber(Customs.Fine).ToString()), 6.0f, true);
+                }
             }
         }
 

@@ -211,6 +211,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Config")
 	bool bAllowAITraders;
 
+	/** Set at runtime from the station's law: a fence's market buys stolen goods. */
+	UPROPERTY(Transient, BlueprintReadOnly, Category="Market Config")
+	bool bBuysStolenGoods = false;
+
+	/** Share of the normal sell price paid for stolen goods (when bBuysStolenGoods). */
+	UPROPERTY(Transient, BlueprintReadOnly, Category="Market Config")
+	float StolenGoodsRate = 0.55f;
+
+	/** Whether this market buys stolen goods now: its station's current law, else bBuysStolenGoods. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Market Config")
+	bool BuysStolenGoods() const;
+
 	// REMOVED: MinReputationRequired - faction reputation system removed per Trade Simulator MVP
 	// MVP Trading is accessible to all players without reputation checks
 

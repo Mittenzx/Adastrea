@@ -64,6 +64,7 @@ bool UTradeItemDataAsset::ItemIdsMatch(FName A, FName B)
         S.RemoveFromStart(TEXT("TradeItem_"));
         S.RemoveFromStart(TEXT("Item_"));
         S.ReplaceInline(TEXT("_"), TEXT(""));
+        S.ReplaceInline(TEXT("-"), TEXT(""));   // "TradeItem_Helium-3" is the crafting tree's "Helium3"
         return S.ToLower();
     };
     return Normalize(A) == Normalize(B);

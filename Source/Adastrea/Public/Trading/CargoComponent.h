@@ -24,14 +24,25 @@ struct FCargoEntry
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Cargo")
 	int32 Quantity;
 
+	/**
+	 * Organisation the goods were taken from by force (stripped from its wreck), or None
+	 * for clean cargo. Lawful stations confiscate stolen goods on docking; fences buy them
+	 * cheap. Stolen and clean units of one item are kept as separate entries.
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Cargo")
+	FName StolenFrom;
+
+	bool IsStolen() const { return !StolenFrom.IsNone(); }
+
 	FCargoEntry()
 		: Item(nullptr)
 		, Quantity(0)
 	{}
 
-	FCargoEntry(UTradeItemDataAsset* InItem, int32 InQuantity)
+	FCargoEntry(UTradeItemDataAsset* InItem, int32 InQuantity, FName InStolenFrom = NAME_None)
 		: Item(InItem)
 		, Quantity(InQuantity)
+		, StolenFrom(InStolenFrom)
 	{}
 };
 
@@ -92,6 +103,27 @@ public:
 	bool RemoveCargo(UTradeItemDataAsset* Item, int32 Quantity);
 
 	/**
+	 * Add goods taken by force from Owner's ship (tagged stolen). Owner None adds clean cargo.
+	 */
+	UFUNCTION(BlueprintCallable, Category="Cargo|Operations")
+	bool AddStolenCargo(UTradeItemDataAsset* Item, int32 Quantity, FName Owner);
+
+	/** Add an entry as it is (clean or stolen). Used when goods move between holds. */
+	bool AddEntry(const FCargoEntry& Entry);
+
+	/**
+	 * Take up to MaxVolume worth of goods out of the hold, front first, keeping their
+	 * stolen tags. Returns what was taken (whole units only).
+	 */
+	TArray<FCargoEntry> TakeLoad(float MaxVolume);
+
+	/** Remove every stolen entry and return them (customs confiscation). */
+	TArray<FCargoEntry> RemoveAllStolen();
+
+	/** Remove up to Quantity stolen units of Item. Returns units removed. */
+	int32 RemoveStolenCargo(UTradeItemDataAsset* Item, int32 Quantity);
+
+	/**
 	 * Clear all cargo
 	 */
 	UFUNCTION(BlueprintCallable, Category="Cargo|Operations")
@@ -144,6 +176,22 @@ public:
 		UFUNCTION(BlueprintCallable, Category="Cargo|Operations")
 		bool RemoveCargoByID(FName ItemID, int32 Quantity);
 
+	/** Clean (not stolen) units of Item. GetItemQuantity counts both. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Cargo|Queries")
+	int32 GetCleanQuantity(UTradeItemDataAsset* Item) const;
+
+	/** Stolen units of Item. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Cargo|Queries")
+	int32 GetStolenQuantity(UTradeItemDataAsset* Item) const;
+
+	/** Stolen units of everything in the hold. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Cargo|Queries")
+	int32 GetTotalStolenUnits() const;
+
+	/** Total units of everything in the hold. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Cargo|Queries")
+	int32 GetTotalUnits() const;
+
 	/**
 	 * Get all cargo entries
 	 * @return Array of cargo entries
@@ -171,6 +219,9 @@ public:
 	FOnCargoSpaceChanged OnCargoSpaceChanged;
 
 private:
-	// Find cargo entry index for item
-	int32 FindCargoEntryIndex(UTradeItemDataAsset* Item) const;
+	// Find the entry holding Item with this stolen tag (the same object first, then the same goods by ID)
+	int32 FindCargoEntryIndex(UTradeItemDataAsset* Item, FName StolenFrom = NAME_None) const;
+
+	/** Sum of entries holding Item; bClean/bStolen pick which. */
+	int32 CountItem(const UTradeItemDataAsset* Item, bool bClean, bool bStolen) const;
 };

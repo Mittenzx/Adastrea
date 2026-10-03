@@ -153,6 +153,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Crafting")
 	bool CraftRecipe(const FCraftingRecipe& Recipe, UCargoComponent* Cargo);
 
+	/** Every loaded recipe (no copy). */
+	const TArray<FCraftingRecipe>& GetAllRecipes() const { return Recipes; }
+
 	/** Number of recipes loaded. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Crafting")
 	int32 GetLoadedRecipeCount() const { return Recipes.Num(); }
@@ -176,6 +179,9 @@ private:
 
 	/** Whether LoadCraftingTree() succeeded. */
 	bool bLoaded = false;
+
+	/** The hand-made trade item asset for a raw resource ("NickelOre" -> DA_TradeItem_NickelOre), or null. */
+	static UTradeItemDataAsset* LoadRawResourceAsset(const FString& ItemID);
 
 	/** Map a crafting-tree Category string to a trade-item category. */
 	static ETradeItemCategory MapTradeCategory(const FString& Category);

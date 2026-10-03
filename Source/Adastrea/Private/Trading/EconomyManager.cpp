@@ -170,7 +170,7 @@ void UEconomyManager::RecordTransaction(UMarketDataAsset* Market, UTradeItemData
 	// crafting-tree item objects, so goods bought at one station arrive as a different object.
 	for (FMarketInventoryEntry& Entry : Market->Inventory)
 	{
-		if (Entry.TradeItem && (Entry.TradeItem == Item || Entry.TradeItem->ItemID == Item->ItemID))
+		if (Entry.TradeItem && (Entry.TradeItem == Item || UTradeItemDataAsset::ItemIdsMatch(Entry.TradeItem->ItemID, Item->ItemID)))
 		{
 			if (bPlayerBought)
 			{

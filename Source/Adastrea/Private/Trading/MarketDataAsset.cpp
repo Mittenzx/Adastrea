@@ -1,5 +1,6 @@
 #include "Trading/MarketDataAsset.h"
 #include "Trading/TradeItemDataAsset.h"
+#include "Stations/SpaceStation.h"
 // REMOVED: #include "Factions/FactionDataAsset.h" - faction system removed per Trade Simulator MVP
 
 UMarketDataAsset::UMarketDataAsset()
@@ -100,11 +101,27 @@ float UMarketDataAsset::GetItemPrice(UTradeItemDataAsset* TradeItem, bool bIsBuy
 	return OnCalculateCustomMarketPrice(TradeItem, bIsBuying, CustomPrice);
 }
 
+bool UMarketDataAsset::BuysStolenGoods() const
+{
+	// Station markets are per-station copies outered to their station (ASpaceStation::ApplyStationMarket).
+	const ASpaceStation* Station = Cast<ASpaceStation>(GetOuter());
+	return Station ? Station->BuysStolenGoods() : bBuysStolenGoods;
+}
+
 bool UMarketDataAsset::GetInventoryEntry(FName ItemID, FMarketInventoryEntry& OutEntry) const
 {
 	for (const FMarketInventoryEntry& Entry : Inventory)
 	{
 		if (Entry.TradeItem && Entry.TradeItem->ItemID == ItemID)
+		{
+			OutEntry = Entry;
+			return true;
+		}
+	}
+	// The same goods under another ID ("TradeItem_IronOre" in the hold, "IronOre" on sale).
+	for (const FMarketInventoryEntry& Entry : Inventory)
+	{
+		if (Entry.TradeItem && UTradeItemDataAsset::ItemIdsMatch(Entry.TradeItem->ItemID, ItemID))
 		{
 			OutEntry = Entry;
 			return true;

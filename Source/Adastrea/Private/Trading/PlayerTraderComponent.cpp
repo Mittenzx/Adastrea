@@ -77,18 +77,27 @@ bool UPlayerTraderComponent::SellItem(UMarketDataAsset* Market, UTradeItemDataAs
 		return false;
 	}
 
-	// Check if has item in cargo
-	if (CargoComponent->GetItemQuantity(Item) < Quantity)
+	// Check if has item in cargo (stolen units only count at a fence)
+	if (GetSellableQuantity(Market, Item, CargoComponent) < Quantity)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayerTrader: Don't have %d x %s in cargo"), Quantity, *Item->ItemName.ToString());
+		UE_LOG(LogTemp, Warning, TEXT("PlayerTrader: Don't have %d x %s in cargo that this market will buy (%d held, %d stolen)"),
+			Quantity, *Item->ItemName.ToString(), CargoComponent->GetItemQuantity(Item), CargoComponent->GetStolenQuantity(Item));
 		return false;
 	}
 
 	// Calculate value
-	int32 TotalValue = GetSellValue(Market, Item, Quantity);
+	const int32 TotalValue = GetSaleValueFromHold(Market, Item, Quantity, CargoComponent);
 
-	// Perform transaction
-	CargoComponent->RemoveCargo(Item, Quantity);
+	// Perform transaction: clean units first, the rest from stolen stock
+	const int32 FromClean = FMath::Min(Quantity, CargoComponent->GetCleanQuantity(Item));
+	if (FromClean > 0)
+	{
+		CargoComponent->RemoveCargo(Item, FromClean);
+	}
+	if (Quantity > FromClean)
+	{
+		CargoComponent->RemoveStolenCargo(Item, Quantity - FromClean);
+	}
 	AddCredits(TotalValue);
 
 	// Record transaction with economy manager
@@ -147,6 +156,27 @@ int32 UPlayerTraderComponent::GetSellValue(UMarketDataAsset* Market, UTradeItemD
 
 	float PricePerUnit = EconomyMgr->GetItemPrice(Market, Item, false);
 	return FMath::RoundToInt(PricePerUnit * Quantity);
+}
+
+int32 UPlayerTraderComponent::GetSellableQuantity(UMarketDataAsset* Market, UTradeItemDataAsset* Item, UCargoComponent* CargoComponent)
+{
+	if (!Market || !Item || !CargoComponent)
+	{
+		return 0;
+	}
+	return CargoComponent->GetCleanQuantity(Item) + (Market->BuysStolenGoods() ? CargoComponent->GetStolenQuantity(Item) : 0);
+}
+
+int32 UPlayerTraderComponent::GetSaleValueFromHold(UMarketDataAsset* Market, UTradeItemDataAsset* Item, int32 Quantity, UCargoComponent* CargoComponent) const
+{
+	if (!Market || !Item || !CargoComponent || Quantity <= 0)
+	{
+		return 0;
+	}
+	const int32 FromClean = FMath::Min(Quantity, CargoComponent->GetCleanQuantity(Item));
+	const int32 FromStolen = Quantity - FromClean;
+	return GetSellValue(Market, Item, FromClean)
+		+ FMath::RoundToInt(GetSellValue(Market, Item, FromStolen) * Market->StolenGoodsRate);
 }
 
 void UPlayerTraderComponent::AddCredits(int32 Amount)

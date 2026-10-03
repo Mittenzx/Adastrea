@@ -104,6 +104,17 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Trading|Queries")
 	int32 GetSellValue(UMarketDataAsset* Market, UTradeItemDataAsset* Item, int32 Quantity) const;
 
+	/**
+	 * Units of Item this market will take from the hold: clean units, plus stolen ones
+	 * at a fence (UMarketDataAsset::bBuysStolenGoods). Lawful markets won't buy stolen goods.
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Trading|Queries")
+	static int32 GetSellableQuantity(UMarketDataAsset* Market, UTradeItemDataAsset* Item, UCargoComponent* CargoComponent);
+
+	/** What selling Quantity units from this hold pays: clean units first, stolen ones at the fence's rate. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Trading|Queries")
+	int32 GetSaleValueFromHold(UMarketDataAsset* Market, UTradeItemDataAsset* Item, int32 Quantity, UCargoComponent* CargoComponent) const;
+
 	// ====================
 	// FINANCE QUERIES
 	// ====================
