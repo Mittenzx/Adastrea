@@ -1,0 +1,72 @@
+{
+  "ship": "SM_Ship_Freighter_01",
+  "size_class": "hero_freighter",
+  "scale": 1.0,
+  "carcass_dims": [
+    523.6,
+    1271.7,
+    197.8
+  ],
+  "hardpoints": {
+    "HP_Engine": {
+      "position": [
+        0.0,
+        -519.0,
+        -4.9
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "engine"
+      ],
+      "occupied": true
+    },
+    "HP_Nose": {
+      "position": [
+        0.0,
+        45.8,
+        30.9
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "weapon"
+      ],
+      "occupied": true
+    },
+    "HP_Sensor": {
+      "position": [
+        0.0,
+        515.6,
+        65.9
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "sensor"
+      ],
+      "occupied": true
+    },
+    "HP_Core": {
+      "position": [
+        0.0,
+        -438.2,
+        -4.9
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "reactor"
+      ],
+      "occupied": true
+    },
+    "HP_Cargo": {
+      "position": [
+        0.0,
+        -22.9,
+        -4.9
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "cargo"
+      ],
+      "occupied": true
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "ship": "SM_Ship_Halo_01",
+  "size_class": "hero_halo",
+  "scale": 1.0,
+  "carcass_dims": [
+    928.3,
+    1576.5,
+    924.0
+  ],
+  "hardpoints": {
+    "HP_Engine": {
+      "position": [
+        0.0,
+        -670.2,
+        0.0
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "engine"
+      ],
+      "occupied": true
+    },
+    "HP_Nose": {
+      "position": [
+        0.0,
+        219.8,
+        61.6
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "weapon"
+      ],
+      "occupied": true
+    },
+    "HP_Sensor": {
+      "position": [
+        0.0,
+        360.6,
+        63.7
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "sensor"
+      ],
+      "occupied": true
+    },
+    "HP_Core": {
+      "position": [
+        0.0,
+        -494.7,
+        0.0
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "reactor"
+      ],
+      "occupied": true
+    },
+    "HP_Cargo": {
+      "position": [
+        0.0,
+        320.8,
+        0.0
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "cargo"
+      ],
+      "occupied": true
+    }
+  }
+}

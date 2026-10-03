@@ -1,0 +1,72 @@
+{
+  "ship": "SM_Ship_Trader_01",
+  "size_class": "hero_trader",
+  "scale": 1.0,
+  "carcass_dims": [
+    374.3,
+    1273.9,
+    282.4
+  ],
+  "hardpoints": {
+    "HP_Engine": {
+      "position": [
+        0.0,
+        -575.6,
+        -56.2
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "engine"
+      ],
+      "occupied": true
+    },
+    "HP_Nose": {
+      "position": [
+        0.0,
+        -5.9,
+        28.2
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "weapon"
+      ],
+      "occupied": true
+    },
+    "HP_Sensor": {
+      "position": [
+        -0.0,
+        468.9,
+        86.8
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "sensor"
+      ],
+      "occupied": true
+    },
+    "HP_Core": {
+      "position": [
+        0.0,
+        -431.2,
+        32.8
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "reactor"
+      ],
+      "occupied": true
+    },
+    "HP_Cargo": {
+      "position": [
+        0.0,
+        4.0,
+        -24.1
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "cargo"
+      ],
+      "occupied": true
+    }
+  }
+}

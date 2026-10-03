@@ -1,0 +1,60 @@
+{
+  "ship": "SM_Ship_BulkCarrier_01",
+  "size_class": "hero_bulkcarrier",
+  "scale": 1.0,
+  "carcass_dims": [
+    865.8,
+    1736.7,
+    387.9
+  ],
+  "hardpoints": {
+    "HP_Engine": {
+      "position": [
+        0.0,
+        -32.2,
+        -7.4
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "engine"
+      ],
+      "occupied": true
+    },
+    "HP_Nose": {
+      "position": [
+        0.0,
+        64.2,
+        -7.4
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "weapon"
+      ],
+      "occupied": true
+    },
+    "HP_Sensor": {
+      "position": [
+        0.0,
+        457.9,
+        -7.4
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "sensor"
+      ],
+      "occupied": true
+    },
+    "HP_Core": {
+      "position": [
+        0.0,
+        775.7,
+        -7.4
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "reactor"
+      ],
+      "occupied": true
+    }
+  }
+}

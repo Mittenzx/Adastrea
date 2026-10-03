@@ -597,6 +597,12 @@ void AAdastreaPlayerController::ClearTarget()
 
 void AAdastreaPlayerController::HandleTargetingToggle()
 {
+	// Tab on the trade screen switches between its Market and Opportunities views.
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()); H && H->bShowTradeScreen)
+	{
+		H->ToggleTradeTab();
+		return;
+	}
 	if (!IsControllingSpaceship())
 	{
 		return;
@@ -767,11 +773,22 @@ void AAdastreaPlayerController::CycleTarget(int32 Direction)
 
 void AAdastreaPlayerController::HandleNextTarget()
 {
+	// ] / [ step the trade screen's category filter while it is open.
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()); H && H->bShowTradeScreen)
+	{
+		H->CycleTradeCategory(+1);
+		return;
+	}
 	CycleTarget(+1);
 }
 
 void AAdastreaPlayerController::HandlePreviousTarget()
 {
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()); H && H->bShowTradeScreen)
+	{
+		H->CycleTradeCategory(-1);
+		return;
+	}
 	CycleTarget(-1);
 }
 
@@ -991,18 +1008,32 @@ void AAdastreaPlayerController::HandleTradeExecute1()
 		H->QueueCraftingSelection(this, 1);
 		return;
 	}
-	ExecuteTrade(1);
+	// Space confirms like Enter: trade the chosen quantity, or plan the highlighted run.
+	if (H && H->bShowTradeScreen)
+	{
+		ConfirmTradeScreen(H);
+	}
+}
+
+void AAdastreaPlayerController::ConfirmTradeScreen(AAdastreaHUD* H)
+{
+	if (H->TradeTab == 1)
+	{
+		H->PlanSelectedTradeRun();
+		UAudioEventLibrary::PlayEvent2D(this, TEXT("UI.Click"), 0.08f);
+		return;
+	}
+	ExecuteTrade(H->TradeQuantity);
 }
 
 void AAdastreaPlayerController::HandleTradeExecute5()
 {
+	// Q queues five production runs; the trade screen sets quantities with Left/Right instead.
 	AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD());
 	if (H && H->bShowCrafting)
 	{
 		H->QueueCraftingSelection(this, 5);
-		return;
 	}
-	ExecuteTrade(5);
 }
 
 void AAdastreaPlayerController::HandleTradeSellAll()
@@ -1021,22 +1052,10 @@ void AAdastreaPlayerController::HandleTradeSellAll()
 		else { H->QueueCraftingSelection(this, 0); }
 		return;
 	}
-	ASpaceship* Ship = GetControlledSpaceship();
-	ASpaceStation* Station = GetNearestTradableStation();
-	if (!H || !H->bShowTradeScreen || H->bBuyMode || !Ship || !Ship->CargoComponent || !Station || !Station->GetMarketplaceModule())
+	if (H && H->bShowTradeScreen && H->TradeTab == 0)
 	{
-		return;
-	}
-	UMarketDataAsset* Market = Station->GetMarketplaceModule()->GetMarketData();
-	if (!Market || !Market->Inventory.IsValidIndex(H->SelectedTradeIndex))
-	{
-		return;
-	}
-	// Stolen goods only count where the market buys them (fences).
-	const int32 Held = UPlayerTraderComponent::GetSellableQuantity(Market, Market->Inventory[H->SelectedTradeIndex].TradeItem, Ship->CargoComponent);
-	if (Held > 0)
-	{
-		ExecuteTrade(Held);
+		// X on the trade screen sets the quantity to the most this mode allows.
+		H->SetTradeQuantityMax();
 	}
 }
 
@@ -1069,9 +1088,46 @@ void AAdastreaPlayerController::ExecuteTrade(int32 Quantity)
 	{
 		return;
 	}
-	const bool bOK = H->bBuyMode
+	// Trade as many of the requested units as are possible (Q on 3 affordable buys 3),
+	// and tell the player what happened or why nothing did.
+	const FString ItemName = Item->ItemName.ToString();
+	if (H->bBuyMode)
+	{
+		FString Limit;
+		Quantity = AAdastreaHUD::GetMaxBuyQuantity(Ship->PlayerTraderComponent, Ship->CargoComponent, Market, Entry, Quantity, &Limit);
+		if (Quantity <= 0)
+		{
+			H->SetTradeMessage(Limit == TEXT("stock") ? FString::Printf(TEXT("%s is out of stock here"), *ItemName)
+				: Limit == TEXT("credits") ? FString::Printf(TEXT("Not enough credits for %s"), *ItemName)
+				: FString(TEXT("No room in your hold")), false);
+		}
+	}
+	else
+	{
+		// Stolen units only sell at a fence.
+		Quantity = FMath::Min(Quantity, UPlayerTraderComponent::GetSellableQuantity(Market, Item, Ship->CargoComponent));
+		if (Quantity <= 0)
+		{
+			H->SetTradeMessage(Ship->CargoComponent->GetItemQuantity(Item) > 0
+				? FString::Printf(TEXT("This market won't buy stolen %s"), *ItemName)
+				: FString::Printf(TEXT("You have no %s to sell"), *ItemName), false);
+		}
+	}
+	const int32 Total = Quantity <= 0 ? 0 : (H->bBuyMode
+		? Ship->PlayerTraderComponent->GetBuyCost(Market, Item, Quantity)
+		: Ship->PlayerTraderComponent->GetSaleValueFromHold(Market, Item, Quantity, Ship->CargoComponent));
+	const bool bOK = Quantity > 0 && (H->bBuyMode
 		? Ship->PlayerTraderComponent->BuyItem(Market, Item, Quantity, Ship->CargoComponent)
-		: Ship->PlayerTraderComponent->SellItem(Market, Item, Quantity, Ship->CargoComponent);
+		: Ship->PlayerTraderComponent->SellItem(Market, Item, Quantity, Ship->CargoComponent));
+	if (bOK)
+	{
+		H->SetTradeMessage(FString::Printf(TEXT("%s %d x %s for %s cr"), H->bBuyMode ? TEXT("Bought") : TEXT("Sold"),
+			Quantity, *ItemName, *FText::AsNumber(Total).ToString()), true);
+	}
+	else if (Quantity > 0)
+	{
+		H->SetTradeMessage(FString::Printf(TEXT("Trade failed: %s"), *ItemName), false);
+	}
 	// Denied covers can't afford, no stock, no hold space and nothing to sell.
 	UAudioEventLibrary::PlayEvent2D(this,
 		!bOK ? FName(TEXT("Trade.Denied")) : (H->bBuyMode ? FName(TEXT("Trade.Buy")) : FName(TEXT("Trade.Sell"))),
@@ -1094,6 +1150,7 @@ void AAdastreaPlayerController::HandleStationMenuConfirm()
 		else if (H->bShowStationMenu) { H->ConfirmStationMenuSelection(this); }
 		else if (H->bShowOutfitting) { H->ConfirmOutfittingPurchase(this); }
 		else if (H->bShowCrafting) { H->QueueCraftingSelection(this, 1); }
+		else if (H->bShowTradeScreen) { ConfirmTradeScreen(H); }
 	}
 }
 
@@ -1129,6 +1186,7 @@ void AAdastreaPlayerController::HandlePauseMenuLeft()
 		if (H->bShowPauseMenu) { H->AdjustPauseMenuValue(-1); }
 		else if (H->bShowOutfitting) { H->MoveOutfittingCategory(-1); }
 		else if (H->bShowCrafting) { H->MoveCraftingFacility(-1); }
+		else if (H->bShowTradeScreen) { H->AdjustTradeQuantity(-1); }
 	}
 }
 
@@ -1139,6 +1197,7 @@ void AAdastreaPlayerController::HandlePauseMenuRight()
 		if (H->bShowPauseMenu) { H->AdjustPauseMenuValue(1); }
 		else if (H->bShowOutfitting) { H->MoveOutfittingCategory(1); }
 		else if (H->bShowCrafting) { H->MoveCraftingFacility(1); }
+		else if (H->bShowTradeScreen) { H->AdjustTradeQuantity(1); }
 	}
 }
 

@@ -50,6 +50,7 @@
 #include "Engine/SCS_Node.h"
 #include "Engine/SimpleConstructionScript.h"
 #include "HAL/IConsoleManager.h"
+#include "Misc/ScopeExit.h"
 
 static TAutoConsoleVariable<float> CVarHUDScale(
 	TEXT("adastrea.HUDScale"),
@@ -1545,116 +1546,6 @@ void AAdastreaHUD::DrawPauseMenu(APlayerController* PC)
 
 	DrawText(TEXT("[UP/DOWN] select     [LEFT/RIGHT] adjust     [ENTER] confirm     [ESC/F10] resume"), kLabel,
 		X + 24.0f, Y + PanelH - 30.0f, HudType::Font(), HudType::Label);
-}
-
-void AAdastreaHUD::MoveTradeSelection(int32 Step)
-{
-	// We need the item count to clamp; the controller passes Step, and we cap
-	// against the docked market's inventory size via a helper.
-	if (AAdastreaPlayerController* AdPC = Cast<AAdastreaPlayerController>(GetOwningPlayerController()))
-	{
-		if (ASpaceStation* Station = AdPC->GetNearestTradableStation())
-		{
-			if (AMarketplaceModule* Marketplace = Station->GetMarketplaceModule())
-			{
-				if (UMarketDataAsset* Market = Marketplace->GetMarketData())
-				{
-					int32 N = FMath::Max(Market->Inventory.Num(), 1);
-					SelectedTradeIndex = FMath::Clamp(SelectedTradeIndex + Step, 0, N - 1);
-					return;
-				}
-			}
-		}
-	}
-	SelectedTradeIndex = FMath::Max(SelectedTradeIndex + Step, 0);
-}
-
-void AAdastreaHUD::DrawTradeScreen(APlayerController* PC, AAdastreaPlayerController* AdController, ASpaceship* Ship)
-{
-	if (!Ship || !AdController)
-	{
-		return;
-	}
-
-	// Locate the docked station's market.
-	ASpaceStation* Station = AdController->GetNearestTradableStation();
-	if (!Station || !Station->GetMarketplaceModule())
-	{
-		DrawText(TEXT("No active market at this dock."), FLinearColor(0.9f,0.6f,0.4f,1.0f), 200.0f, 200.0f, HudType::Font(), HudType::Body);
-		return;
-	}
-	UMarketDataAsset* Market = Station->GetMarketplaceModule()->GetMarketData();
-	if (!Market)
-	{
-		DrawText(TEXT("Station market is not configured."), FLinearColor(0.9f,0.6f,0.4f,1.0f), 200.0f, 200.0f, HudType::Font(), HudType::Body);
-		return;
-	}
-
-	int32 VX = 0, VY = 0;
-	PC->GetViewportSize(VX, VY);
-	const float VW = (float)VX, VH = (float)VY;
-
-	// Full-screen dim backdrop.
-	DrawRect(FLinearColor(0.02f, 0.03f, 0.05f, 0.94f), 0.0f, 0.0f, VW, VH);
-
-
-	// Credits + cargo header row.
-	const int32 Credits = Ship->PlayerTraderComponent ? Ship->PlayerTraderComponent->GetCredits() : 0;
-	const float CargoUsed = Ship->CargoComponent ? (Ship->CargoComponent->CargoCapacity - Ship->CargoComponent->GetAvailableCargoSpace()) : 0.0f;
-	const float CargoMax = Ship->CargoComponent ? FMath::Max(Ship->CargoComponent->CargoCapacity, 0.01f) : 1.0f;
-
-	DrawCentredText(TEXT("TRADING"), FLinearColor(0.15f,0.9f,0.6f,1.0f), VW * 0.5f, 18.0f, HudType::Title);
-	DrawCentredText(Market->GetName(), FLinearColor(0.8f,0.9f,1.0f,1.0f), VW * 0.5f, 52.0f, HudType::Body);
-	DrawText(FString::Printf(TEXT("CREDITS: %d"), Credits), FLinearColor(0.95f,0.78f,0.30f,1.0f), 40.0f, 40.0f, HudType::Font(), HudType::Body);
-	DrawText(FString::Printf(TEXT("CARGO: %.0f / %.0f"), CargoUsed, CargoMax), FLinearColor(0.15f,0.9f,0.6f,1.0f), 40.0f, 66.0f, HudType::Font(), HudType::Body);
-	DrawText(bBuyMode ? TEXT("MODE: BUY") : TEXT("MODE: SELL"),
-		bBuyMode ? FLinearColor(0.3f,0.9f,0.4f,1.0f) : FLinearColor(0.9f,0.5f,0.3f,1.0f),
-		VW-220.0f, 40.0f, HudType::Font(), HudType::Body);
-
-	// Column headers.
-	const float ListX = 60.0f;
-	const float PriceX = VW*0.45f;
-	const float StockX = VW*0.68f;
-	DrawText(TEXT("ITEM"), FLinearColor(0.6f,0.7f,0.8f,1.0f), ListX, 100.0f, HudType::Font(), HudType::Label);
-	DrawText(TEXT("PRICE"), FLinearColor(0.6f,0.7f,0.8f,1.0f), PriceX, 100.0f, HudType::Font(), HudType::Label);
-	DrawText(TEXT("STOCK"), FLinearColor(0.6f,0.7f,0.8f,1.0f), StockX, 100.0f, HudType::Font(), HudType::Label);
-
-	// Item rows (scroll window around selection).
-	const int32 InventoryCount = Market->Inventory.Num();
-	constexpr int32 VisibleRows = 12;
-	const int32 Half = VisibleRows / 2;
-	int32 StartIndex = FMath::Clamp(SelectedTradeIndex - Half, 0, FMath::Max(InventoryCount - VisibleRows, 0));
-	int32 EndIndex = FMath::Min(StartIndex + VisibleRows, InventoryCount);
-	float RowY = 126.0f;
-	const float RowH = 26.0f;
-
-	for (int32 i = StartIndex; i < EndIndex; ++i)
-	{
-		const FMarketInventoryEntry& Entry = Market->Inventory[i];
-		if (!Entry.TradeItem)
-		{
-			continue;
-		}
-		// Row background highlight for the selected index.
-		if (i == SelectedTradeIndex)
-		{
-			DrawRect(FLinearColor(0.15f, 0.32f, 0.35f, 0.5f), ListX-10.0f, RowY-2.0f, VW*0.8f, RowH-4.0f);
-		}
-		const FString ItemName = Entry.TradeItem->ItemName.ToString();
-		const int32 ItemPrice = bBuyMode
-			? Ship->PlayerTraderComponent->GetBuyCost(Market, Entry.TradeItem, 1)
-			: Ship->PlayerTraderComponent->GetSellValue(Market, Entry.TradeItem, 1);
-		// dim items not in stock for buy mode
-		FLinearColor NameCol = FLinearColor(0.9f,0.95f,1.0f,1.0f);
-		if (bBuyMode && Entry.CurrentStock <= 0) { NameCol = FLinearColor(0.4f,0.45f,0.5f,1.0f); }
-		DrawText(ItemName, NameCol, ListX, RowY, HudType::Font(), HudType::Body);
-		DrawText(FString::Printf(TEXT("%d cr"), ItemPrice), FLinearColor(0.95f,0.78f,0.30f,1.0f), PriceX, RowY, HudType::Font(), HudType::Body);
-		DrawText(FString::Printf(TEXT("%d"), Entry.CurrentStock), FLinearColor(0.7f,0.8f,0.9f,1.0f), StockX, RowY, HudType::Font(), HudType::Body);
-		RowY += RowH;
-	}
-
-	// Footer controls.
-	DrawCentredText(TEXT("Up/Down: select    [B]/[S]: toggle Buy/Sell    [Space]: trade 1    [Esc]: close    [Q]: trade 5    [X]: sell all"), FLinearColor(0.6f,0.7f,0.8f,0.9f), VW * 0.5f, VH - 40.0f, HudType::Label);
 }
 
 // ========================================================================

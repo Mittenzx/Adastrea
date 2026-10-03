@@ -1,0 +1,72 @@
+{
+  "ship": "SM_Ship_Mule_01",
+  "size_class": "hero_mule",
+  "scale": 1.0,
+  "carcass_dims": [
+    392.0,
+    916.0,
+    285.7
+  ],
+  "hardpoints": {
+    "HP_Engine": {
+      "position": [
+        0.0,
+        -351.5,
+        -20.9
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "engine"
+      ],
+      "occupied": true
+    },
+    "HP_Nose": {
+      "position": [
+        0.0,
+        161.4,
+        72.4
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "weapon"
+      ],
+      "occupied": true
+    },
+    "HP_Sensor": {
+      "position": [
+        0.0,
+        108.0,
+        95.6
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "sensor"
+      ],
+      "occupied": true
+    },
+    "HP_Core": {
+      "position": [
+        0.0,
+        -202.0,
+        43.1
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "reactor"
+      ],
+      "occupied": true
+    },
+    "HP_Cargo": {
+      "position": [
+        0.0,
+        -152.0,
+        -102.9
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "cargo"
+      ],
+      "occupied": true
+    }
+  }
+}
