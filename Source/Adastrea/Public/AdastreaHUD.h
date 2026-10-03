@@ -587,14 +587,22 @@ private:
 	/** Destroy the preview ship, its capture and its light. */
 	void DestroyShipPreview();
 
-	/** Ship classes the ship-select screen lists, smallest hull first. Built from every
+	/** Ship classes the ship-select screen lists, by purpose then smallest hull. Built from every
 	 * ASpaceship Blueprint in /Game/Blueprints/Ships each time the screen opens, so a new
 	 * ship shows up without touching code; mesh, hull and stats come from each class. */
 	UPROPERTY(Transient)
 	TArray<TSubclassOf<ASpaceship>> ShipRoster;
 
-	/** First roster row drawn; the list scrolls when it is taller than the panel. */
+	/** First list row drawn (group headers count as rows); the list scrolls when it is taller than the panel. */
 	int32 ShipSelectScroll = 0;
+
+	/** Preview camera distance from the hull (normalized to a ~1000u radius); the mouse wheel zooms. */
+	float ShipPreviewDistance = 6500.0f;
+
+	/** Left-drag orbit on the preview, and when the player last turned it (the turntable waits a moment). */
+	bool bShipPreviewDragging = false;
+	FVector2D ShipPreviewDragLast = FVector2D::ZeroVector;
+	double ShipPreviewLastTouched = -100.0;
 
 	/** Rebuild ShipRoster from the asset registry. */
 	void BuildShipRoster();
